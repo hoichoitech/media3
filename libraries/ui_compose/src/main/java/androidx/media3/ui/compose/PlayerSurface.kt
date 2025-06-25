@@ -74,7 +74,7 @@ fun PlayerSurface(
 }
 
 @Composable
-private fun <T : View> PlayerSurfaceInternal(
+fun <T : View> PlayerSurfaceInternal(
   player: Player,
   modifier: Modifier,
   createView: (Context) -> T,
