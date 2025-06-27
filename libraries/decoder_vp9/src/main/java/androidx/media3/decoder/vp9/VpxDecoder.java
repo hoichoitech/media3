@@ -15,11 +15,9 @@
  */
 package androidx.media3.decoder.vp9;
 
-import static androidx.annotation.VisibleForTesting.PACKAGE_PRIVATE;
-
 import android.view.Surface;
+
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.media3.common.C;
 import androidx.media3.common.util.Assertions;
 import androidx.media3.common.util.UnstableApi;
@@ -30,12 +28,13 @@ import androidx.media3.decoder.CryptoInfo;
 import androidx.media3.decoder.DecoderInputBuffer;
 import androidx.media3.decoder.SimpleDecoder;
 import androidx.media3.decoder.VideoDecoderOutputBuffer;
+
 import java.nio.ByteBuffer;
 
 /** Vpx decoder. */
-@VisibleForTesting(otherwise = PACKAGE_PRIVATE)
+// @VisibleForTesting(otherwise = PACKAGE_PRIVATE)
 @UnstableApi
-public final class VpxDecoder
+public class VpxDecoder
     extends SimpleDecoder<DecoderInputBuffer, VideoDecoderOutputBuffer, VpxDecoderException> {
 
   // These constants should match the codes returned from vpxDecode and vpxSecureDecode functions in
@@ -74,9 +73,9 @@ public final class VpxDecoder
       throw new VpxDecoderException("Failed to load decoder native libraries.");
     }
     this.cryptoConfig = cryptoConfig;
-    if (cryptoConfig != null && !VpxLibrary.vpxIsSecureDecodeSupported()) {
-      throw new VpxDecoderException("Vpx decoder does not support secure decode.");
-    }
+//    if (cryptoConfig != null && !VpxLibrary.vpxIsSecureDecodeSupported()) {
+//      throw new VpxDecoderException("Vpx decoder does not support secure decode.");
+//    }
     vpxDecContext =
         vpxInit(/* disableLoopFilter= */ false, /* enableRowMultiThreadMode= */ false, threads);
     if (vpxDecContext == 0) {

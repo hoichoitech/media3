@@ -22,11 +22,11 @@ import androidx.media3.decoder.DecoderException;
 @UnstableApi
 public final class VpxDecoderException extends DecoderException {
 
-  /* package */ VpxDecoderException(String message) {
+  /* package */ public VpxDecoderException(String message) {
     super(message);
   }
 
-  /* package */ VpxDecoderException(String message, Throwable cause) {
+  /* package */ public VpxDecoderException(String message, Throwable cause) {
     super(message, cause);
   }
 }

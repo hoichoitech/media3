@@ -37,7 +37,7 @@ public final class VpxLibrary {
         }
       };
 
-  private static @C.CryptoType int cryptoType = C.CRYPTO_TYPE_UNSUPPORTED;
+  private static @C.CryptoType int cryptoType = C.CRYPTO_TYPE_FRAMEWORK;
 
   private VpxLibrary() {}
 
