@@ -19,6 +19,7 @@ import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Util.percentFloat;
 
 import android.net.Uri;
+
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
@@ -38,7 +39,9 @@ import androidx.media3.datasource.cache.CacheWriter;
 import androidx.media3.datasource.cache.ContentMetadata;
 import androidx.media3.exoplayer.upstream.ParsingLoadable;
 import androidx.media3.exoplayer.upstream.ParsingLoadable.Parser;
+
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -111,8 +114,8 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
     /** The start time of the segment in microseconds. */
     public final long startTimeUs;
 
-    /** The {@link DataSpec} of the segment. */
-    public final DataSpec dataSpec;
+    /** The {@link DataSpec} of the segment: Mutable for convenience  */
+    public DataSpec dataSpec;
 
     /** Constructs a Segment. */
     public Segment(long startTimeUs, DataSpec dataSpec) {
@@ -238,6 +241,11 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
       long bytesDownloaded = 0;
       for (int i = segments.size() - 1; i >= 0; i--) {
         DataSpec dataSpec = segments.get(i).dataSpec;
+
+        // Persist the manifest URI in the DataSpec so that it can be used at a later point if needed.
+        dataSpec = dataSpec.buildUpon().setCustomData(manifestDataSpec.uri).build();
+        segments.get(i).dataSpec = dataSpec;
+
         String cacheKey = cacheKeyFactory.buildCacheKey(dataSpec);
         long segmentLength = dataSpec.length;
         if (segmentLength == C.LENGTH_UNSET) {
@@ -398,7 +406,14 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
         new RunnableFutureTask<M, IOException>() {
           @Override
           protected M doWork() throws IOException {
-            return ParsingLoadable.load(dataSource, manifestParser, dataSpec, C.DATA_TYPE_MANIFEST);
+              DataSpec customDataSpec = dataSpec;
+              // Create a new DataSpec for each media playlist to ensure that the base URI is set,
+              // for convenience to extract later, when working with base manifest, for stream keys or so...
+              if (customDataSpec.customData == null) {
+                  customDataSpec = dataSpec.buildUpon().setCustomData(manifestDataSpec.uri).build();
+              }
+
+            return ParsingLoadable.load(dataSource, manifestParser, customDataSpec, C.DATA_TYPE_MANIFEST);
           }
         },
         removing);
