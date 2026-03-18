@@ -400,6 +400,7 @@ public abstract class SegmentDownloader<M extends FilterableManifest<M>> impleme
   protected final M getManifest(DataSource dataSource, DataSpec dataSpec, boolean removing)
       throws InterruptedException, IOException {
     return execute(
+        () ->
         new RunnableFutureTask<M, IOException>() {
           @Override
           protected M doWork() throws IOException {

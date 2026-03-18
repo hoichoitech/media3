@@ -512,9 +512,13 @@ public final class FrameworkMediaDrm implements ExoMediaDrm {
     return SDK_INT < 27 && Objects.equals(uuid, C.CLEARKEY_UUID);
   }
 
-  private static void forceWidevineL3(MediaDrm mediaDrm) {
+    public static void forceWidevineL3(MediaDrm mediaDrm) {
     mediaDrm.setPropertyString("securityLevel", "L3");
   }
+
+    public void forceWidevineL3() {
+        forceWidevineL3(mediaDrm);
+    }
 
   /**
    * Returns whether the device codec is known to fail if security level L1 is used.
