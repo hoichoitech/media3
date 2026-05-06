@@ -16,6 +16,12 @@ apply from: "$gradle.ext.androidxMediaSettingsDir/common_library_config.gradle"
 android {
     namespace 'androidx.media3.decoder.av1'
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+
     defaultConfig {
         externalNativeBuild {
             cmake {
@@ -40,6 +46,12 @@ if (project.file('src/main/jni/dav1d').exists()) {
         }
     }
 }
+
+ext {
+    releaseArtifactId = 'media3-decoder-av1'
+    releaseName = 'Media3 AV1 decoder module'
+}
+apply from: '../../publish.gradle'
 
 dependencies {
     api project(modulePrefix + 'lib-decoder')

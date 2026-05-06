@@ -16,6 +16,12 @@ apply from: "$gradle.ext.androidxMediaSettingsDir/common_library_config.gradle"
 android {
     namespace 'androidx.media3.decoder.ffmpeg'
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+
     sourceSets {
         androidTest.assets.srcDir '../test_data/src/test/assets'
     }
@@ -30,6 +36,12 @@ if (project.file('src/main/jni/ffmpeg').exists()) {
     android.externalNativeBuild.cmake.version = '3.21.0+'
     // LINT.ThenChange(src/main/jni/CMakeLists.txt)
 }
+
+ext {
+    releaseArtifactId = 'media3-decoder-ffmpeg'
+    releaseName = 'Media3 FFmpeg decoder module'
+}
+apply from: '../../publish.gradle'
 
 dependencies {
     api project(modulePrefix + 'lib-decoder')
