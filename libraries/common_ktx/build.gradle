@@ -15,15 +15,16 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 
-apply from: "$gradle.ext.androidxMediaSettingsDir/common_library_config.gradle"
+apply plugin: 'com.android.library'
+apply from: "$gradle.ext.androidxMediaSettingsDir/common_config.gradle"
 apply plugin: 'kotlin-android'
 
 android {
     namespace 'androidx.media3.common.ktx'
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildTypes {

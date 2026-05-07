@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 // Copyright (C) 2016 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +45,29 @@ allprojects {
         buildDir = "${externalBuildDir}/${project.name}"
     }
     group = 'androidx.media3'
+    tasks.withType(KotlinCompile).configureEach {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_1_8
+        }
+    }
+}
+
+task printReleaseArtifactIds {
+    description = "Prints the releaseArtifactId of modules configured for publishing."
+    doLast {
+        subprojects { project ->
+            // Check if the project is intended to be published by looking for a task
+            // added by the media/publish.gradle script.
+            if (!project.tasks.names.contains('generatePomFileForReleasePublication')) {
+                return
+            }
+
+            String artifactId
+            if (project.ext.has('releaseArtifactId')) {
+                println project.ext.releaseArtifactId
+            } else {
+                logger.warn("WARN: Project ${project.path} has publish task but no releaseArtifactId.")
+            }
+        }
+    }
 }

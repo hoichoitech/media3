@@ -11,10 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-apply from: "$gradle.ext.androidxMediaSettingsDir/common_library_config.gradle"
+apply plugin: 'com.android.library'
+apply from: "$gradle.ext.androidxMediaSettingsDir/common_config.gradle"
 
 android {
     namespace 'androidx.media3.decoder.av1'
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 
     defaultConfig {
         externalNativeBuild {
@@ -40,6 +47,12 @@ if (project.file('src/main/jni/dav1d').exists()) {
         }
     }
 }
+
+ext {
+    releaseArtifactId = 'media3-decoder-av1'
+    releaseName = 'Media3 AV1 decoder module'
+}
+apply from: '../../publish.gradle'
 
 dependencies {
     api project(modulePrefix + 'lib-decoder')
