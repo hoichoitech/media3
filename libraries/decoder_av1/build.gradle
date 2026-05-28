@@ -65,3 +65,4 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:' + androidxTestRunnerVersion
     androidTestImplementation 'androidx.test.ext:junit:' + androidxTestJUnitVersion
 }
+
