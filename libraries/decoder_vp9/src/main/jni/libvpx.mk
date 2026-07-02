@@ -80,4 +80,6 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/libvpx \
                            $(LOCAL_PATH)/libvpx/vpx
 
 LOCAL_LDFLAGS := -Wl,--version-script=$(CONFIG_DIR)/libvpx.ver
+# Enable 16 KB ELF alignment.
+LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
 include $(BUILD_SHARED_LIBRARY)
