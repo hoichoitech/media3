@@ -403,6 +403,32 @@ public final class DefaultHlsPlaylistTracker
       redundantGroupListCreationError = e;
       return;
     }
+    if (variantRedundantGroups.isEmpty()) {
+      // Audio-only HLS: no video variants. Promote first audio rendition as synthetic variant.
+      Uri audioUrl = null;
+      for (HlsMultivariantPlaylist.Rendition audio : multivariantPlaylist.audios) {
+        if (audio.url != null) {
+          audioUrl = audio.url;
+          break;
+        }
+      }
+      if (audioUrl == null) {
+        redundantGroupListCreationError =
+            ParserException.createForMalformedManifest(
+                "No variants or audio renditions with URLs found.", /* cause= */ null);
+        return;
+      }
+      multivariantPlaylist =
+          HlsMultivariantPlaylist.createSingleVariantMultivariantPlaylist(audioUrl.toString());
+      this.multivariantPlaylist = multivariantPlaylist;
+      try {
+        this.variantRedundantGroups =
+            HlsRedundantGroup.createVariantRedundantGroupList(multivariantPlaylist.variants);
+      } catch (ParserException e) {
+        redundantGroupListCreationError = e;
+        return;
+      }
+    }
     HlsRedundantGroup primaryRedundantGroup = variantRedundantGroups.get(0);
     primaryMediaPlaylistUrl = primaryRedundantGroup.getCurrentPlaylistUrl();
     // Add a temporary playlist listener for loading the first primary playlist.
