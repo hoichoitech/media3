@@ -31,7 +31,19 @@ android {
             useLegacyPackaging true
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
+
+ext {
+    releaseArtifactId = 'media3-decoder-vp9'
+    releaseName = 'Media3 VP9 decoder module'
+}
+apply from: '../../publish.gradle'
 
 dependencies {
     api project(modulePrefix + 'lib-decoder')

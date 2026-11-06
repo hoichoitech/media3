@@ -23,6 +23,12 @@ android {
             useLegacyPackaging true
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 // Configure the native build only if ffmpeg is present to avoid gradle sync
@@ -34,6 +40,12 @@ if (project.file('src/main/jni/ffmpeg').exists()) {
     android.externalNativeBuild.cmake.version = '3.21.0+'
     // LINT.ThenChange(src/main/jni/CMakeLists.txt)
 }
+
+ext {
+    releaseArtifactId = 'media3-decoder-ffmpeg'
+    releaseName = 'Media3 FFmpeg decoder module'
+}
+apply from: '../../publish.gradle'
 
 dependencies {
     api project(modulePrefix + 'lib-decoder')
